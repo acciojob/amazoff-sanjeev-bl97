@@ -48,14 +48,11 @@ public class OrderController {
 
         Order order= null;
         //order should be returned with an orderId.
-        try{
+
         order = orderService.getOrderById(orderId);
 
         return new ResponseEntity<>(order, HttpStatus.CREATED);
-        }
-        catch (Exception ex){
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
+
     }
 
     @GetMapping("/get-partner-by-id/{partnerId}")

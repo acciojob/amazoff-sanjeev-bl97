@@ -25,10 +25,7 @@ public class OrderService {
     }
 
     public Order getOrderById(String orderId) {
-        Optional<Order> val = orderRepository.getOrderById(orderId);
-        if(val.isEmpty())
-            throw new RuntimeException("Order not Found");
-        return val.get();
+        return orderRepository.getOrderById(orderId);
     }
 
     public DeliveryPartner getPartnerById(String partnerId) {

@@ -38,11 +38,8 @@ public class OrderRepository {
 
     }
 
-    public Optional<Order> getOrderById(String orderId) {
-        if(!oh.containsKey(orderId))
-            return Optional.empty();
-
-        return Optional.of(oh.get(orderId));
+    public Order getOrderById(String orderId) {
+        return oh.get(orderId);
 
 
     }

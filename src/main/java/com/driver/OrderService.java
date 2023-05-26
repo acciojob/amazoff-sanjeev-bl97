@@ -52,7 +52,25 @@ public class OrderService {
     }
 
     public Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId) {
-        return orderRepository.getOrdersLeftAfterGivenTimeByPartnerId(time,partnerId);
+        String[] a = time.split(":");
+        int actualTime = Integer.parseInt(a[0]) * 60 + Integer.parseInt(a[1]);
+        return orderRepository.getOrdersLeftAfterGivenTimeByPartnerId(actualTime,partnerId);
+    }
+
+    public String getLastDeliveryTimeByPartnerId(String partnerId) {
+        int time = orderRepository.getLastDeliveryTimeByPartnerId(partnerId);
+        int h = time / 60;
+        int m = time % 60;
+
+        String hh = String.valueOf(h);
+        String mm = String.valueOf(m);
+
+        if(hh.length() == 1)
+            hh = '0' + hh;
+        if(mm.length() == 1)
+            mm = '0' + mm;
+
+        return hh+":"+mm;
     }
 
     public void deletePartnerById(String partnerId) {
@@ -63,8 +81,6 @@ public class OrderService {
         orderRepository.deleteOrderById(orderId);
     }
 
-    public String getLastDeliveryTimeByPartnerId(String partnerId) {
-        return orderRepository.getLastDeliveryTimeByPartnerId(partnerId);
-    }
+
 
 }

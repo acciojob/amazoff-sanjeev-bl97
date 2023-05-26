@@ -2,10 +2,7 @@ package com.driver;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class OrderRepository {
@@ -13,9 +10,11 @@ public class OrderRepository {
     private HashMap<String,Order> oh = new HashMap<>();
     private HashMap<String,DeliveryPartner> dh = new HashMap<>();
     private HashMap<String, ArrayList<String>> od = new HashMap<>();
+    private HashSet<String> orderSet = new HashSet<>();
 
     public void addOrder(Order order) {
         oh.put(order.getId(),order);
+        orderSet.add(order.getId());
 
     }
 
@@ -31,6 +30,10 @@ public class OrderRepository {
         al.add(orderId);
 
         od.put(partnerId,al);
+        orderSet.remove(orderId);
+
+
+        dh.get(partnerId).setNumberOfOrders( dh.get(partnerId).getNumberOfOrders()+1);
     }
 
     public Optional<Order> getOrderById(String orderId) {
@@ -59,36 +62,27 @@ public class OrderRepository {
     }
 
     public Integer getCountOfUnassignedOrders() {
-        int orders = oh.size();
-        int total = 0;
 
-        for(String id : od.keySet())
-        {
-            total += getOrderCountByPartnerId(id);
-        }
 
-        return orders - total;
+        return orderSet.size();
     }
 
-    public Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId) {
+    public Integer getOrdersLeftAfterGivenTimeByPartnerId(int time, String partnerId) {
 
         int count = 0;
-        String[] a = time.split(":");
-        int actualTime = Integer.parseInt(a[0]) * 60 + Integer.parseInt(a[1]);
 
-        for(String b : od.keySet()) {
-            ArrayList<String> al = od.get(b);
-            for (int i = 0; i < al.size(); i++) {
-                String orderId = al.get(i);
-                if (oh.get(orderId).getDeliveryTime() > actualTime)
+        for(String b : od.get(partnerId)) {
+            Order or = oh.get(b);
+            if (or.getDeliveryTime() > time)
                     count++;
             }
-        }
+
         return count;
     }
 
-    public String getLastDeliveryTimeByPartnerId(String partnerId) {
+    public int getLastDeliveryTimeByPartnerId(String partnerId) {
         int max = Integer.MIN_VALUE;
+
         for(String b : od.keySet()) {
             ArrayList<String> al = od.get(b);
             for (int i = 0; i < al.size(); i++) {
@@ -97,33 +91,35 @@ public class OrderRepository {
                     max = oh.get(orderId).getDeliveryTime();
             }
         }
-        int h = max / 60;
-        int m = max % 60;
 
 
-        return h+":"+m;
+
+        return max;
 
     }
 
 
     public void deletePartnerById(String partnerId) {
+        if(od.get(partnerId) != null)
+            orderSet.addAll(od.get(partnerId));
         dh.remove(partnerId);
         od.remove(partnerId);
     }
 
     public void deleteOrderById(String orderId) {
-        oh.remove(orderId);
 
-        for(String a : od.keySet()){
-            ArrayList<String> al = od.get(a);
-            for(int i = 0; i < al.size(); i++){
-                if(al.get(i).equals(orderId))
-                    al.remove(i);
 
+
+        if(oh.containsKey(orderId)){
+            if(orderSet.contains(orderId))
+                orderSet.remove(orderId);
+            else{
+                for(String partner : dh.keySet()){
+                    List<String> orders = od.get(partner);
+                    if(orders.contains(orderId))
+                        orders.remove(orderId);
+                }
             }
-            od.put(a,al);
-
-
         }
 
 

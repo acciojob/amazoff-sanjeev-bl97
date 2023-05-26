@@ -85,13 +85,10 @@ public class OrderRepository {
     public int getLastDeliveryTimeByPartnerId(String partnerId) {
         int max = Integer.MIN_VALUE;
 
-        for(String b : od.keySet()) {
-            ArrayList<String> al = od.get(b);
-            for (int i = 0; i < al.size(); i++) {
-                String orderId = al.get(i);
-                if (oh.get(orderId).getDeliveryTime() > max)
-                    max = oh.get(orderId).getDeliveryTime();
-            }
+        for(String b : od.get(partnerId)) {
+            Order or = oh.get(b);
+            if (or.getDeliveryTime() > max)
+                max = or.getDeliveryTime();
         }
 
 

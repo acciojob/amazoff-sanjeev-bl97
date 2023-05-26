@@ -114,7 +114,7 @@ public class OrderRepository {
             if(orderSet.contains(orderId))
                 orderSet.remove(orderId);
             else{
-                for(String partner : dh.keySet()){
+                for(String partner : od.keySet()){
                     List<String> orders = od.get(partner);
                     if(orders.contains(orderId))
                         orders.remove(orderId);

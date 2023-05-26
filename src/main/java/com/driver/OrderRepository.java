@@ -29,11 +29,13 @@ public class OrderRepository {
             al = new ArrayList<>();
         al.add(orderId);
 
+        dh.get(partnerId).setNumberOfOrders( dh.get(partnerId).getNumberOfOrders()+1);
+
         od.put(partnerId,al);
         orderSet.remove(orderId);
 
 
-        dh.get(partnerId).setNumberOfOrders( dh.get(partnerId).getNumberOfOrders()+1);
+
     }
 
     public Optional<Order> getOrderById(String orderId) {

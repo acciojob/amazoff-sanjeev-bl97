@@ -9,7 +9,7 @@ public class OrderRepository {
 
     private HashMap<String,Order> oh = new HashMap<>();
     private HashMap<String,DeliveryPartner> dh = new HashMap<>();
-    private HashMap<String, ArrayList<String>> od = new HashMap<>();
+    private HashMap<String, List<String>> od = new HashMap<>();
     private HashSet<String> orderSet = new HashSet<>();
 
     public void addOrder(Order order) {
@@ -24,12 +24,13 @@ public class OrderRepository {
     }
 
     public void addOrderPartnerPair(String orderId, String partnerId) {
-        ArrayList<String> al = od.get(partnerId);
+        List<String> al = od.get(partnerId);
         if(al == null)
             al = new ArrayList<>();
         al.add(orderId);
 
-        dh.get(partnerId).setNumberOfOrders( dh.get(partnerId).getNumberOfOrders()+1);
+        DeliveryPartner partner = dh.get(partnerId);
+        partner.setNumberOfOrders( partner.getNumberOfOrders()+1);
 
         od.put(partnerId,al);
         orderSet.remove(orderId);
@@ -49,7 +50,7 @@ public class OrderRepository {
     }
 
     public Integer getOrderCountByPartnerId(String partnerId) {
-        return dh.get(partnerId).getNumberOfOrders();
+        return od.get(partnerId).size();
     }
 
     public List<String> getOrdersByPartnerId(String partnerId) {

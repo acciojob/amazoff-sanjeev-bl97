@@ -1,10 +1,6 @@
 package com.driver;
 
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 public class Order {
 
     private String id;
@@ -17,8 +13,20 @@ public class Order {
         this.id = id;
 
         String[] a = deliveryTime.split(":");
-        this.deliveryTime = Integer.parseInt(a[0]) * 60 + Integer.parseInt(a[1]);
+        this.deliveryTime = (Integer.parseInt(a[0]) * 60) + Integer.parseInt(a[1]);
     }
 
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+    public int getDeliveryTime() {
+        return deliveryTime;
+    }
+    public void setDeliveryTime(int deliveryTime) {
+        this.deliveryTime = deliveryTime;
+    }
 
 }
